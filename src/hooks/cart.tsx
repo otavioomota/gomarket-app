@@ -41,6 +41,13 @@ const CartProvider: React.FC = ({ children }) => {
     loadProducts();
   }, []);
 
+  useEffect(() => {
+    async function savingData(): Promise<void> {
+      await AsyncStorage.setItem('@GoMarket:cart', JSON.stringify(products));
+    }
+    savingData();
+  }, [products]);
+
   const addToCart = useCallback(
     async ({ id, title, image_url, price }: Omit<Product, 'quantity'>) => {
       const productAlreadyInCartIndex = products.findIndex(
@@ -61,11 +68,6 @@ const CartProvider: React.FC = ({ children }) => {
       }
 
       // console.log('[Cart]: ', productsUpdated);
-
-      await AsyncStorage.setItem(
-        '@GoMarket:cart',
-        JSON.stringify(productsUpdated),
-      );
     },
     [products],
   );
@@ -79,11 +81,6 @@ const CartProvider: React.FC = ({ children }) => {
       productsUpdated[productIndex].quantity += 1;
 
       setProducts(productsUpdated);
-
-      await AsyncStorage.setItem(
-        '@GoMarket:cart',
-        JSON.stringify(productsUpdated),
-      );
     },
     [products],
   );
@@ -101,11 +98,6 @@ const CartProvider: React.FC = ({ children }) => {
       productsUpdated[productIndex].quantity -= 1;
 
       setProducts(productsUpdated);
-
-      await AsyncStorage.setItem(
-        '@GoMarket:cart',
-        JSON.stringify(productsUpdated),
-      );
     },
     [products],
   );
